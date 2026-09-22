@@ -1,0 +1,30 @@
+STM32F103C8T6 + HC-SR04 测距测试
+
+本工程基于之前已经调好的小车工程，电机 GPIO 不变：
+PA1 -> PWMA
+PA2 -> PWMB
+PA4 -> AIN2
+PA5 -> AIN1
+PA6 -> BIN1
+PA7 -> BIN2
+
+HC-SR04 按图片改为：
+PB14 -> Trig
+PB15 <- Echo
+GND  -> GND，必须与 STM32 共地
+
+测距计时使用 TIM4；电机 PWM 使用 TIM2，两者不冲突。
+
+主函数不做蓝牙遥控，只循环测距，每 500 ms 发送一次结果。
+USART1 波特率 9600：
+PA9 -> HC-05 RXD（或 USB-TTL 的 RX）
+PA10 <- HC-05 TXD（此测试实际不需要接收）
+
+手机蓝牙串口助手连接 HC-05 后，应看到：
+Distance: 025 cm
+Distance: 026 cm
+...
+如果没有收到 Echo，会显示：
+Distance: timeout
+
+供电提醒：标准 HC-SR04 通常建议 5V 供电；若用 5V 供电，Echo 为约 5V，建议用电阻分压后再送入 PB15，最稳妥。
